@@ -1,14 +1,7 @@
 #!/bin/bash
 
-#Confirm the etracs/bin path of the run.sh file
-etracs_bin=docker/bin
-
-#Get the email recipients
-recipient=mark.ramesessystems@gmail.com
-cc=
-
-#Get the current date
-date_now=$(date +'%Y-%b-%d')
+#Include the configuration file
+source env.conf
 
 #Prompt user to confirm if all etracs clients are shutdown
 echo ""
@@ -25,13 +18,13 @@ if [ "$input" = "Y" ]; then
 	cd
 	cd Backup/Backup
 
-    #Delete the previous unfinished backup folder while retaining the MySQL Folder
-    find . ! -name 'MySQL' -type d -exec rm -rf {} +
+    	#Delete the previous unfinished backup folder while retaining the MySQL Folder
+    	find . ! -name 'MySQL' -type d -exec rm -rf {} +
 
 	#Create the folder with the current date as the folder name
 	mkdir -p "$date_now"
 	echo ""
-	echo "BACKUP FOLDER CREATED: $date_now"
+	echo "Backup Folder Created: $date_now" | mail -s "Backup Folder Created: $date_now" $recipient $cc $bcc
 	echo ""
 
 else

@@ -1,11 +1,7 @@
 #!/bin/bash
 
-
-#Get the etracs/bin folder
-etracs_bin=docker/bin
-
-#Get the current date
-date_now=$(date +'%Y-%b-%d')
+#Configuration file
+source env.conf
 
 #Maximum backup files in MySQL folder
 max_files=1
@@ -22,7 +18,7 @@ cd ..
 echo ""
 echo "COMPRESSING FILES"
 tar -czvf "$date_now.tar.gz" $date_now
-mv "$date_now.tar.gz" ~/Backup/MySQL
+mv "$date_now.tar.gz" ~/Backup/Backup/MySQL
 echo ""
 echo "MYSQL BACKUP COMPLETED"
 echo ""
@@ -30,8 +26,20 @@ echo ""
 #Delete the uncompressed backup folder
 rm -rf $date_now
 
+#Send backup file to email
+(printf "%s\n" \
+     "To: $recipient:" \
+     "Subject: [MYSQL DATABASE] Backup for $date_now" \
+     "CC: $cc" \
+     "BCC: $bcc" \
+     "Content-Type: application/zip" \
+     "Content-Disposition: attachment; filename=$attachment_path" \
+     "Content-Transfer-Encoding: base64" \
+     "";
+base64 "$attachment_path") | sendmail $recipient $cc $bcc
+
 #Go to docker/bin
-cd ~/etracs_bin
+cd ~/$etracs_bin
 
 # Pause first then start the Etracs server to allow transactions
 sleep 3
