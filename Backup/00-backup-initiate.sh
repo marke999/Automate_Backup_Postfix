@@ -23,10 +23,10 @@ if [ "$input" = "Y" ]; then
         sh stop.sh
 
 	cd
-	cd Backup
+	cd Backup/Backup
 
-        #Delete the previous unfinished backup folder while retaining the MySQL Folder
-        find . ! -name 'MySQL' -type d -exec rm -rf {} +
+    #Delete the previous unfinished backup folder while retaining the MySQL Folder
+    find . ! -name 'MySQL' -type d -exec rm -rf {} +
 
 	#Create the folder with the current date as the folder name
 	mkdir -p "$date_now"
